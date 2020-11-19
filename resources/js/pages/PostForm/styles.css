@@ -1,0 +1,57 @@
+.top-section {
+  background: #fff;
+  height: 80px;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: center;
+}
+
+.top-section.sticky {
+  height: 50px;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  border-bottom: solid 1px #eceff1;
+}
+
+.top-section .input-title {
+  width: 100%;
+  padding: 10px 0px;
+  font-size: 1.8rem;
+  border: none;
+  font-weight: 600;
+  outline: none;
+}
+
+.top-section.sticky .input-title {
+  font-size: 1rem;
+}
+
+.input-tag {
+  width: 100%;
+  padding: 10px 0px;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
+
+.ck.ck-editor__editable > .ck-placeholder::before {
+  font-size: 16px;
+}
+
+.ck.ck-editor__editable_inline {
+  border: none;
+}
+
+.ck-rounded-corners .ck.ck-editor__editable:not(.ck-editor__nested-editable),
+.ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-rounded-corners {
+  padding: 0px;
+  border-radius: 0px;
+}
+
+.ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}

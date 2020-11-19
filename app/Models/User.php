@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasApiTokens;
 
@@ -22,6 +22,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'avatar',
     ];
 
     /**
@@ -48,11 +49,25 @@ class User extends Authenticatable
 
     /**
      * One to Many relation to Provider model
-     * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function providers()
     {
         return $this->hasMany(Provider::class);
+    }
+
+    /**
+     * One to Many relation to Post model
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Many to Many relation to Post model using PostBookmark pivot model
+     */
+    public function bookmarks()
+    {
+        return $this->belongsToMany(Post::class, 'post_bookmark', 'user_id', 'post_id');
     }
 }

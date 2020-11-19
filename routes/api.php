@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\Api\ClapController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\TagController;
-use App\Http\Controllers\Api\TopicController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,18 +18,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    Route::apiResource('/topics', TopicController::class);
-    Route::apiResource('/tags', TagController::class);
+// Auth endpoint
+Route::get('login/{provider}', [AuthController::class, 'redirectToProvider']);
+Route::get('login/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+Route::get('logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 });
 
-Route::get('login/{provider}', [LoginController::class, 'redirectToProvider']);
-Route::get('login/{provider}/callback', [LoginController::class, 'handleProviderCallback']);
+// Post endpoint
+Route::get('posts/status/{status}', [PostController::class, 'status']);
+Route::get('posts/{slug}/edit', [PostController::class, 'showEdit']);
+Route::get('posts/{id}/bookmark', [PostController::class, 'bookmark']);
+Route::apiResource('/posts', PostController::class);
 
+// Tag endpoint
+Route::apiResource('/tags', TagController::class);
+
+// Clap endpoint
+Route::patch('/claps', [ClapController::class, 'claps']);
+Route::get('/claps/post/{id}', [ClapController::class, 'postClaps']);
+
+// 404 not found
 Route::fallback(function () {
     return response()->json([
         'message' => 'Page Not Found. If error persists, leave me?!'

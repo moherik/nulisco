@@ -27,4 +27,30 @@ class TagRequest extends FormRequest
             'title' => 'required|string|max:100'
         ];
     }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'required' => ':attribute harus diisi',
+            'string' => ':attribute harus diisi',
+            'max' => ':attribute maksimal :max karakter',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'title' => 'Judul',
+        ];
+    }
 }

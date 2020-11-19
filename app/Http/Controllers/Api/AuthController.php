@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     /**
      * Redirect the user to the provider authentication page.
@@ -22,7 +25,9 @@ class LoginController extends Controller
             return $validated;
         }
 
-        return Socialite::driver($provider)->stateless()->redirect();
+        return response()->json([
+            'url' => Socialite::driver($provider)->stateless()->redirect()->getTargetUrl(),
+        ]);
     }
 
     /**
@@ -41,7 +46,7 @@ class LoginController extends Controller
             $user = Socialite::driver($provider)->stateless()->user();
         } catch (ClientException $exception) {
             return response()->json([
-                'error' => 'Invalid credentials provided.'
+                'error' => 'Invalid credentials provider.'
             ]);
         }
 
@@ -52,8 +57,13 @@ class LoginController extends Controller
             [
                 'email_verified_at' => Carbon::now(),
                 'name' => $user->getName(),
+                'avatar' => $user->getAvatar(),
             ]
         );
+
+        if ($userCreated->wasRecentlyCreated) {
+            $userCreated->update(['username' => Str::slug($userCreated->name, '') . $userCreated->id]);
+        }
 
         $userCreated->providers()->updateOrCreate(
             [
@@ -65,9 +75,19 @@ class LoginController extends Controller
             ]
         );
 
-        $token = $userCreated->createToken($provider)->plainTextToken;
+        $newUser = Auth::loginUsingId($userCreated->id, true);
 
-        return response()->json($token, 200);
+        return new UserResource($newUser);
+    }
+
+    /**
+     * Signing out authenticated user
+     * 
+     * @return void
+     */
+    public function logout()
+    {
+        Auth::logout();
     }
 
     /**
