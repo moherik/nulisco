@@ -4,34 +4,36 @@ import { axios } from "../../utils/axios";
 
 import { AuthContext } from "../../contexts/AuthContext";
 
-const LoginGoogleCallback = (props) => {
-    let isMounted = true;
-    let history = useHistory();
-    const {dispatch} = useContext(AuthContext);
+const LoginGoogleCallback = props => {
+  let isMounted = true;
+  let history = useHistory();
+  const { dispatch } = useContext(AuthContext);
 
-    const fetchCallbackData = async () => {
-        await axios.get("/sanctum/csrf-cookie").then(() => {
-            axios.get(`/api/login/google/callback${props.location.search}`, {
-                headers: new Headers({accept: "application/json"})
-            })
-            .then(({data}) => {
-                if(isMounted) {
-                    dispatch({type: 'SET_USER', payload: {user: data}})
-                    history.push("/");
-                }
-            })
-            .catch((err) => console.error(err))
-        });
-    }
+  const fetchCallbackData = async () => {
+    await axios.get("/sanctum/csrf-cookie").then(() => {
+      axios
+        .get(`/api/login/google/callback${props.location.search}`, {
+          headers: new Headers({ accept: "application/json" })
+        })
+        .then(({ data }) => {
+          if (isMounted) {
+            dispatch({ type: "SET_USER", payload: { user: data } });
+            history.push("/");
+          }
+        })
+        .catch(err => console.error(err));
+    });
+  };
 
-    useEffect(() => {
-        fetchCallbackData();
+  useEffect(() => {
+    fetchCallbackData();
 
-        return () => {isMounted = false}
-    }, [])
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-    return (<p>Loading....</p>)
+  return <p>Loading....</p>;
+};
 
-}
-
-export default LoginGoogleCallback
+export default LoginGoogleCallback;
