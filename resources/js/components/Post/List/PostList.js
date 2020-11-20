@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 import "./styles.css";
 
-const PostList = ({ item }) => {
+const PostList = ({ item, deletePost }) => {
   const { state } = useContext(AuthContext);
 
   const DEFAULT_IMAGE = "https://picsum.photos/seed/picsum/200/300?random=1";
@@ -22,16 +22,20 @@ const PostList = ({ item }) => {
           {item.short_title}
         </Link>
         <div className="mt-2">
-          <p>{item.desc}</p>
-          <p>{item.created_at}</p>
-          {state.user && state.user.id === item.user.id && (
-            <>
-              <Link to={`/${item.user.userid}/${item.slug}/edit`}>Edit</Link>
-              <Link to="/delete" className="text-danger">
-                Delete
-              </Link>
-            </>
-          )}
+          <p>{item.subtitle || item.desc}</p>
+          <p>
+            {item.created_at}
+            {state.user && state.user.id === item.user.id && (
+              <>
+                <span className="mx-2">&#8226;</span>
+                <Link to={`/${item.user.userid}/${item.slug}/edit`}>Edit</Link>
+                <span className="mx-2">&#8226;</span>
+                <a href="#" className="text-danger" onClick={deletePost}>
+                  Delete
+                </a>
+              </>
+            )}
+          </p>
         </div>
       </div>
       <div className="image text-right">

@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import BaloonBlockEditor from "@ckeditor/ckeditor5-build-balloon-block";
 import { useParams } from "react-router-dom";
-import { axios } from "../../utils/axios";
+import { axios } from "../../../utils/axios";
 
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 import "./styles.css";
+import Loading from "../../Loading/Loading";
 
 const PostForm = ({ editMode }) => {
   const { state, dispatch } = useContext(AuthContext);
@@ -14,6 +15,7 @@ const PostForm = ({ editMode }) => {
   const [editId, setEditId] = useState("");
   const [body, setBody] = useState("");
   const [title, setTitle] = useState("");
+  const [subtitle, setSubtitle] = useState("");
   const [tags, setTags] = useState([]);
   const [isSticky, setIsSticky] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,7 @@ const PostForm = ({ editMode }) => {
     await axios
       .post("/api/posts", {
         title,
+        subtitle,
         body,
         tags,
         status: "PUBLISH"
@@ -41,6 +44,7 @@ const PostForm = ({ editMode }) => {
       await axios
         .patch(`/api/posts/${id}`, {
           title,
+          subtitle,
           body,
           tags
         })
@@ -82,6 +86,7 @@ const PostForm = ({ editMode }) => {
         .then(({ data }) => {
           setEditId(data.id);
           setTitle(data.title);
+          setSubtitle(data.subtitle);
           setBody(data.body);
         })
         .catch(err => console.error(err))
@@ -102,7 +107,7 @@ const PostForm = ({ editMode }) => {
   }, []);
 
   if (editMode && loading) {
-    return <p>loading...</p>;
+    return <Loading />;
   }
 
   return (
@@ -137,13 +142,13 @@ const PostForm = ({ editMode }) => {
               </button>
             </div>
           </div>
-
           <input
             type="text"
-            className="input-tag text-muted"
+            className="input"
             tabIndex="2"
-            placeholder="Insert tag"
-            onChange={handleChangeTag}
+            placeholder="Insert subtitle"
+            value={subtitle}
+            onChange={e => setSubtitle(e.target.value)}
           />
           <CKEditor
             editor={BaloonBlockEditor}
@@ -166,6 +171,13 @@ const PostForm = ({ editMode }) => {
             }}
             data={body}
             onChange={(evt, editor) => setBody(editor.getData())}
+          />
+          <input
+            type="text"
+            className="input"
+            tabIndex="2"
+            placeholder="Insert tag"
+            onChange={handleChangeTag}
           />
         </div>
       </div>

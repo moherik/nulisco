@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
+            $table->string('subtitle')->nullable();
             $table->string('slug')->unique();
             $table->text('body');
             $table->enum('status', ['DRAFT', 'PUBLISH', 'ARCHIVE'])->default('DRAFT');

@@ -1,6 +1,7 @@
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
-import PostList from "../../components/PostList/PostList";
+import PostList from "../../components/Post/List/PostList";
+import { axios } from "../../utils/axios";
 
 import "./styles.css";
 
@@ -9,10 +10,17 @@ const Home = () => {
 
   const fetchPost = async () => {
     await Axios.get("/api/posts")
-      .then(({ data }) => {
-        setPost(data);
-      })
+      .then(({ data }) => setPost(data))
       .catch(err => console.error("error fetch data, ", err));
+  };
+
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+
+    await axios
+      .delete(`/api/posts/${id}`)
+      .then(_res => setPost(post.filter(item => item.id !== id)))
+      .catch(err => console.error(err));
   };
 
   useEffect(() => {
@@ -28,7 +36,11 @@ const Home = () => {
       <div className="row">
         <div className="col-md-8 col-sm-12 mx-auto">
           {post.map(post => (
-            <PostList key={post.id} item={post} />
+            <PostList
+              key={post.id}
+              item={post}
+              deletePost={e => handleDelete(e, post.id)}
+            />
           ))}
         </div>
       </div>

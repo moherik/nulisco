@@ -6,14 +6,13 @@ import user from "@iconify-icons/uil/chat-bubble-user";
 import plus from "@iconify-icons/uil/plus-circle";
 import userCircle from "@iconify-icons/uil/user-circle";
 import signOut from "@iconify-icons/uil/sign-out-alt";
-import post from "@iconify-icons/uil/message";
 
 import { AuthContext } from "../../contexts/AuthContext";
 import { axios } from "../../utils/axios";
 
 import "./styles.css";
 
-const MainNavbar = () => {
+const Navbar = () => {
   let history = useHistory();
   const { state, dispatch } = useContext(AuthContext);
 
@@ -91,4 +90,4 @@ const MainNavbar = () => {
   );
 };
 
-export default MainNavbar;
+export default Navbar;

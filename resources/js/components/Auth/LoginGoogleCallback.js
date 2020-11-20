@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { axios } from "../../utils/axios";
 
 import { AuthContext } from "../../contexts/AuthContext";
+import Loading from "../Loading/Loading";
 
 const LoginGoogleCallback = props => {
   let isMounted = true;
@@ -33,7 +34,7 @@ const LoginGoogleCallback = props => {
     };
   }, []);
 
-  return <p>Loading....</p>;
+  return <Loading />;
 };
 
 export default LoginGoogleCallback;

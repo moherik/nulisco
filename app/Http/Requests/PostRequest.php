@@ -27,6 +27,7 @@ class PostRequest extends FormRequest
         return [
             'user_id' => 'required|integer',
             'title' => 'required|string|max:100',
+            'subtitle' => 'string|max:200',
             'slug' => 'required|string',
             'body' => 'required',
             'status' => 'string',
@@ -58,6 +59,7 @@ class PostRequest extends FormRequest
         return [
             'user_id' => 'id user',
             'title' => 'judul',
+            'subtitle' => 'sub judul',
             'slug' => 'slug',
             'body' => 'konten',
             'tags.*.title' => 'tag',
@@ -73,7 +75,6 @@ class PostRequest extends FormRequest
     {
         $this->merge([
             'user_id' => (int)$this->user()->id,
-            'title' => ucwords(strtolower($this->title)),
             'slug' => Str::slug($this->title) . '-' . time(),
         ]);
     }

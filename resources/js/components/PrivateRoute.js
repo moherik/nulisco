@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 
 import { axios } from "../utils/axios";
+import Loading from "./Loading/Loading";
 
 const PrivateRoute = ({ component: Component, login, ...rest }) => {
   const [user, setUser] = useState(null);
@@ -23,7 +24,7 @@ const PrivateRoute = ({ component: Component, login, ...rest }) => {
       {...rest}
       render={props => {
         return loading ? (
-          <p>Loading...</p>
+          <Loading />
         ) : user && user !== null ? (
           <Component {...props} />
         ) : (
